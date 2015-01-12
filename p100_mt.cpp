@@ -68,11 +68,12 @@ void * search(void * arg)
 	}
 
 }
+static const unsigned int MAX_RANGE=10000000;
 int main(int argc, char * argv[])
 {
 	string  s(argv[1]);
 	next_start=s;
-	int n=stoi(argv[1]);
+	unsigned long long n=stoll(argv[1]);
 	unsigned int ncpu=std::thread::hardware_concurrency();
 	if(ncpu==0)
 	{
@@ -82,7 +83,8 @@ int main(int argc, char * argv[])
 	cout<<"Using "<<ncpu<<" cores"<<endl;
 	pthread_t * threads=new pthread_t[ncpu];
 	vector<pair<mpz_class,mpz_class>> args;
-	range=n/ncpu;
+	unsigned long long r=n/ncpu;
+	range=r>MAX_RANGE?MAX_RANGE:(unsigned int)r;
 	for(int i=0;i<ncpu;i++)
 	{
 		args.push_back(pair<mpz_class,mpz_class>(next_start,next_start+range));
